@@ -39,18 +39,11 @@ def main():
     input_schema_path = os.path.join(directory, "schema", "input_schema.json")
     output_schema_path = os.path.join(directory, "schema", "output_schema.json")
 
-    # -----------------------
-    # 2. Generate data model using datamodel-code-generator
-    #    The data model is output to a file.
-    # -----------------------
-    output_dir = os.path.join(directory, "generated_models")
-    os.makedirs(output_dir, exist_ok=True)
-
     input_schema = load_json_schema(Path(input_schema_path))
     output_schema = load_json_schema(Path(output_schema_path))
 
     # -----------------------
-    # 3. setting Jinja2 env
+    # 2. setting Jinja2 env
     # -----------------------
     env = Environment(
         loader=FileSystemLoader(searchpath=os.path.join(directory, "templates")),
@@ -61,12 +54,14 @@ def main():
     template = env.get_template("ngsi_template.j2")
 
     # -----------------------
-    # 4. load csv file
+    # 3. load csv file
     # -----------------------
     csv_path = os.path.join(directory, "data.csv")
     csv_data = load_csv_data(Path(csv_path))
 
-    # 5. exec
+    # -----------------------
+    # 4. exec
+    # -----------------------
     output_json = template.render(
         data=csv_data,
         output_schema=output_schema,
