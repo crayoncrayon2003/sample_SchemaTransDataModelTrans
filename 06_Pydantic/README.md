@@ -1,2 +1,19 @@
+# create env
+```
+python3.12 -m venv env
+source env/bin/activate
+pip install --upgrade pip setuptools wheel
+pip install -r requirements.txt
+```
 
-pip install datamodel_code_generator
+# Sample1
+## Run
+```
+python3.12 *.py
+```
+
+# delete env
+```
+(env) deactivate
+rm -R env
+```
