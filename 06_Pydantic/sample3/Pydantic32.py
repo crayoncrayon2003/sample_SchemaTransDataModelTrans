@@ -114,7 +114,7 @@ def main():
     # -----------------------
     # 5. load csv file
     # -----------------------
-    csv_path = os.path.join(directory, "data.csv")
+    csv_path = os.path.join(os.path.dirname(os.path.dirname(directory)), "00_data", "data.csv")
     csv_data = load_csv_data(Path(csv_path))
 
     # -----------------------

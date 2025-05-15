@@ -1,0 +1,1 @@
+{{ generate_ngsi_sql('csv_format_2') }}

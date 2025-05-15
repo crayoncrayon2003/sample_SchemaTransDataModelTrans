@@ -1,0 +1,8 @@
+test_project:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      threads: 1
+      path: ./duckdb/database.duckdb
+      database: database
