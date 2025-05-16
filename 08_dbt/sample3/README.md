@@ -142,7 +142,11 @@ dbt seed
 
 # create model
 dbt run
+
+# output file
+dbt run-operation copy_to_file --args '{"table_name": "main.csv_format_1_transformation", "file_path": "output/my_model.json", "format": "json"}'
 ```
+
 
 ## Note
 If you get a build error,
