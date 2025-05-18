@@ -133,20 +133,33 @@ FROM read_csv_auto('{{ input_csv_path }}')
 ## build
 ```
 cd ./project/test_project
+```
 
-# confirm connection based on profiles.yml
+## confirm connection based on profiles.yml
+```
 dbt debug
-
-# load seed
+```
+## load seed
+```
 dbt seed
+```
 
-# create model
+## create model
+```
 dbt run
+```
 
-# output file
+## output file
+```
 dbt run-operation copy_to_file --args '{"table_name": "main.csv_format_1_transformation", "file_path": "output/my_model.json", "format": "json"}'
 ```
 
+## doc
+```
+dbt docs generate
+dbt docs serve
+http://localhost:8080
+```
 
 ## Note
 If you get a build error,
@@ -164,9 +177,8 @@ rm ./project/test_project/dev.duckdb
 pip install dbt-core dbt-duckdb duckdb pandas ray
 ```
 
-./sample2.py
 ```
-import duckdb
-con = duckdb.connect('path/to/your.duckdb')
-result = con.execute("SELECT * FROM main.csv_to_ngsi_model").fetchall()
+python 01_update_csv.py
+python 02_update_dbt.py
+python 03_update_dbt.py
 ```
