@@ -1,0 +1,5 @@
+﻿fare_id,price,currency_type,payment_method,transfers,transfer_duration
+Fare250yen_000,250,JPY,0,0,0
+Fare300yen_000,300,JPY,0,0,0
+均一運賃_000,250,JPY,0,0,0
+均一運賃_016180,250,JPY,0,1,6180

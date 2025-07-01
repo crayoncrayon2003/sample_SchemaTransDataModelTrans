@@ -1,0 +1,220 @@
+
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'test_project'
+version: '1.0.0'
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'test_project'
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory. You probably won't need to change these!
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+# In this example config, we tell dbt to build all models in the example/
+# directory as views. These settings can be overridden in the individual model
+# files using the `{{ config(...) }}` macro.
+models:
+  test_project:
+    +materialized: view
+
+seeds:
+  test_project:
+    agency:
+      +column_types:
+        agency_id: VARCHAR(255)
+        agency_name: VARCHAR(255)
+        agency_url: VARCHAR(255)
+        agency_timezone: VARCHAR(255)
+        agency_lang: VARCHAR(255)
+        agency_phone: VARCHAR(255)
+        agency_fare_url: VARCHAR(255)
+        agency_email: VARCHAR(255)
+    stops:
+      +column_types:
+        stop_id: VARCHAR(255)
+        stop_code: VARCHAR(255)
+        stop_name: VARCHAR(255)
+        stop_desc: VARCHAR(255)
+        stop_lat: DOUBLE
+        stop_lon: DOUBLE
+        zone_id: VARCHAR(255)
+        stop_url: VARCHAR(255)
+        location_type: INTEGER
+        parent_station: VARCHAR(255)
+        stop_timezone: VARCHAR(255)
+        wheelchair_boarding: INTEGER
+        level_id: VARCHAR(255)
+        platform_code: VARCHAR(255)
+    routes:
+      +column_types:
+        route_id: VARCHAR(255)
+        agency_id: VARCHAR(255)
+        route_short_name: VARCHAR(255)
+        route_long_name: VARCHAR(255)
+        route_desc: VARCHAR(255)
+        route_type: INTEGER
+        route_url: VARCHAR(255)
+        route_color: VARCHAR(255)
+        route_text_color: VARCHAR(255)
+    trips:
+      +column_types:
+        trip_id: VARCHAR(255)
+        route_id: VARCHAR(255)
+        service_id: VARCHAR(255)
+        trip_headsign: VARCHAR(255)
+        trip_short_name: VARCHAR(255)
+        direction_id: INTEGER
+        block_id: VARCHAR(255)
+        shape_id: VARCHAR(255)
+        wheelchair_accessible: INTEGER
+        bikes_allowed: INTEGER
+    stop_times:
+      +column_types:
+        trip_id: VARCHAR(255)
+        arrival_time: TIME
+        departure_time: TIME
+        stop_id: VARCHAR(255)
+        stop_sequence: INTEGER
+        stop_headsign: VARCHAR(255)
+        pickup_type: INTEGER
+        drop_off_type: INTEGER
+        shape_dist_traveled: DOUBLE
+        timepoint: INTEGER
+    calendar:
+      +column_types:
+        service_id: VARCHAR(255)
+        monday: INTEGER
+        tuesday: INTEGER
+        wednesday: INTEGER
+        thursday: INTEGER
+        friday: INTEGER
+        saturday: INTEGER
+        sunday: INTEGER
+        start_date: VARCHAR(255) # DATE
+        end_date: VARCHAR(255) # DATE
+    calendar_dates:
+      +column_types:
+        service_id: VARCHAR(255)
+        date: VARCHAR(255) # DATE
+        exception_type: INTEGER
+    fare_attributes:
+      +column_types:
+        fare_id: VARCHAR(255)
+        price: DOUBLE
+        currency_type: VARCHAR(255)
+        payment_method: INTEGER
+        transfers: INTEGER
+        agency_id: VARCHAR(255)
+        transfer_duration: BIGINT
+    fare_rules:
+      +column_types:
+        fare_id: VARCHAR(255)
+        route_id: VARCHAR(255)
+        origin_id: VARCHAR(255)
+        destination_id: VARCHAR(255)
+        contains_id: VARCHAR(255)
+    shapes:
+      +column_types:
+        shape_id: VARCHAR(255)
+        shape_pt_lat: DOUBLE
+        shape_pt_lon: DOUBLE
+        shape_pt_sequence: INTEGER
+        shape_dist_traveled: DOUBLE
+    frequencies:
+      +column_types:
+        trip_id: VARCHAR(255)
+        start_time: TIME
+        end_time: TIME
+        headway_secs: INTEGER
+        exact_times: INTEGER
+    transfers:
+      +column_types:
+        from_stop_id: VARCHAR(255)
+        to_stop_id: VARCHAR(255)
+        transfer_type: INTEGER
+        min_transfer_time: INTEGER
+    pathways:
+      +column_types:
+        pathway_id: VARCHAR(255)
+        from_stop_id: VARCHAR(255)
+        to_stop_id: VARCHAR(255)
+        pathway_mode: INTEGER
+        is_bidirectional: INTEGER
+        length: DOUBLE
+        traversal_time: INTEGER
+        stair_count: INTEGER
+        max_slope: DOUBLE
+        min_width: DOUBLE
+        signposted_as: VARCHAR(255)
+        reversed_signposted_as: VARCHAR(255)
+    levels:
+      +column_types:
+        level_id: VARCHAR(255)
+        level_index: DOUBLE
+        level_name: VARCHAR(255)
+    agency_jp:
+      +column_types:
+        agency_id: VARCHAR(255)
+        agency_postal: VARCHAR(255)
+        agency_address: VARCHAR(255)
+    jp_offices:
+      +column_types:
+        office_id: VARCHAR(255)
+        office_name: VARCHAR(255)
+        office_url: VARCHAR(255)
+        office_phone: VARCHAR(255)
+        office_address: VARCHAR(255)
+    jp_lines:
+      +column_types:
+        line_id: VARCHAR(255)
+        line_code: VARCHAR(255)
+        line_symbol: VARCHAR(255)
+        line_name: VARCHAR(255)
+        line_color: VARCHAR(255)
+        line_sort_order: INTEGER
+    jp_operators:
+      +column_types:
+        operator_id: VARCHAR(255)
+        operator_name: VARCHAR(255)
+        operator_url: VARCHAR(255)
+        operator_phone: VARCHAR(255)
+        operator_address: VARCHAR(255)
+    jp_stop_offices:
+      +column_types:
+        stop_id: VARCHAR(255)
+        office_id: VARCHAR(255)
+    jp_route_lines:
+      +column_types:
+        route_id: VARCHAR(255)
+        line_id: VARCHAR(255)
+    translations:
+      +column_types:
+        table_name: VARCHAR(255)
+        field_name: VARCHAR(255)
+        language: VARCHAR(255)
+        translation: VARCHAR(255)
+        record_id: VARCHAR(255)
+    feed_info:
+      +column_types:
+        feed_publisher_name: VARCHAR(255)
+        feed_publisher_url: VARCHAR(255)
+        feed_lang: VARCHAR(255)
+        feed_start_date: VARCHAR(255) # DATE
+        feed_end_date: VARCHAR(255) # DATE
+        feed_version: VARCHAR(255)

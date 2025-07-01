@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: stops_ngsi
+    description: "GTFS stops を NGSIv2形式に変換"
+    columns:
+      - name: id
+        tests: [not_null]
+      - name: location
+        description: "GeoJSON形式のPoint"
+
+  - name: trips_ngsi
+    description: "GTFS trips を NGSIv2形式に変換"
+    columns:
+      - name: id
+        tests: [not_null]
+      - name: location
+        description: "出発停留所のGeoJSON Point"
+
+  - name: routes_ngsi
+    description: "GTFS routes を NGSIv2形式に変換（LineString）"
+    columns:
+      - name: id
+        tests: [not_null]
+      - name: location
+        description: "GeoJSON LineString（ルート全体）"
