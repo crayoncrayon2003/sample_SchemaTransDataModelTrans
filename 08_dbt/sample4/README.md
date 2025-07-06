@@ -36,11 +36,16 @@ project
 
 ## remove example
 ```
-rm -R ./test_project/models/example
+rm -R models/example
 ```
 
-## create dir
-mkdir ./test_project/db
+## get duckdb
+```
+wget https://github.com/duckdb/duckdb/releases/download/v1.3.1/duckdb_cli-linux-amd64.zip
+unzip duckdb_cli-linux-amd64.zip
+chmod +x duckdb
+rm duckdb_cli-linux-amd64.zip
+```
 
 ## modify dbt_project.yml
 ./project/test_project/dbt_project.yml
@@ -247,8 +252,8 @@ seeds:
         feed_publisher_name: VARCHAR(255)
         feed_publisher_url: VARCHAR(255)
         feed_lang: VARCHAR(255)
-        feed_start_date: VARCHAR(255) # DATE
-        feed_end_date: VARCHAR(255) # DATE
+        feed_start_date: DATE
+        feed_end_date: DATE
         feed_version: VARCHAR(255)
 ```
 
@@ -269,22 +274,23 @@ test_project:
       - spatial
 ```
 
+## create dir
+mkdir ./db
+
 
 ## create sample data
 ```
-cd ./test_project/seeds
+cd ./project/test_project/seeds
 wget https://api.gtfs-data.jp/v2/organizations/kokacity/feeds/sinaicommunitybus/files/feed.zip
 unzip feed.zip -d ./
 rm feed.zip
 
 for f in *.txt; do mv -- "$f" "${f%.txt}.csv"; done
-
-cd ..
-cd ..
 ```
 
 ## create macros
-cd ./test_project/macros/copy_to_file.sql
+./project/test_project/macros/copy_to_file.sql
+
 ```
 {% macro copy_to_file(relation, path, format='csv') %}
     {% set sql %}
@@ -374,6 +380,7 @@ select
     g.geojson as location
 from {{ ref('routes') }} r
 left join routes_geojson g on r.route_id = g.route_id
+
 ```
 
 
@@ -407,22 +414,8 @@ models:
         description: "GeoJSON LineString（ルート全体）"
 ```
 
-## get duckdb
-```
-wget https://github.com/duckdb/duckdb/releases/download/v1.3.1/duckdb_cli-linux-amd64.zip
-unzip duckdb_cli-linux-amd64.zip
-chmod +x duckdb
-rm duckdb_cli-linux-amd64.zip
-```
-```
-./duckdb ./db/database.duckdb
-D INSTALL spatial;
-D LOAD spatial;
-D .quit
-```
-
 ## build
-cd ./test_project
+cd ./project/test_project
 
 ### confirm connection based on profiles.yml
 ```
