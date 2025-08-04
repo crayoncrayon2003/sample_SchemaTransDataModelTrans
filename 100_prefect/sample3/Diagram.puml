@@ -1,0 +1,183 @@
+@startuml ETL Framework - Comprehensive Class Diagram
+
+' --- スタイル定義 ---
+skinparam classAttributeIconSize 0
+skinparam defaultFontName "Segoe UI", "Helvetica", "Arial"
+skinparam package {
+    BackgroundColor LightBlue
+    BorderColor RoyalBlue
+}
+skinparam class {
+    BackgroundColor LightYellow
+    ArrowColor Navy
+    BorderColor Navy
+}
+skinparam interface {
+    BackgroundColor LightPink
+    BorderColor Firebrick
+}
+
+' --- 起点となるスクリプト ---
+class "ETL Flow\n(etl_flow.py)" as EtlFlowScript
+
+' #############################################
+' ###           CORE FRAMEWORK              ###
+' #############################################
+package "scripts.core" {
+
+    package "orchestrator" {
+        class FlowExecutor {
+            - parser: PipelineParser
+            - step_executor: StepExecutor
+            + run()
+        }
+        class "task_wrapper" as TaskWrapper <<function>>
+    }
+
+    package "pipeline" {
+        class PipelineParser
+        class StepExecutor {
+             - plugin_manager: PluginManager
+             + execute_step()
+        }
+        class DependencyResolver
+    }
+
+    package "plugin_manager" {
+        class PluginManager {
+            + get_plugin()
+        }
+        class "PluginRegistry (singleton)" as PluginRegistry
+        interface PluginInterface
+        interface ExtractorInterface
+        interface CleanserInterface
+        interface TransformerInterface
+        interface ValidatorInterface
+        interface LoaderInterface
+    }
+
+    package "data_container" {
+        class DataContainer {
+            + data: DataFrame
+            + metadata: Dict
+            + file_paths: List<Path>
+        }
+        enum SupportedFormats
+    }
+
+    package "config" {
+        class ConfigLoader
+        class ConfigValidator
+    }
+}
+
+
+' #############################################
+' ###              PLUGINS                  ###
+' #############################################
+package "scripts.plugins" {
+
+    package "extractors" {
+        abstract class BaseExtractor
+        class LocalFileExtractor
+        class LocalJsonExtractor
+        class HttpExtractor
+        class FtpExtractor
+        class ScpExtractor
+        class DatabaseExtractor
+    }
+
+    package "cleansing" {
+        abstract class BaseCleanser
+        class ArchiveExtractor
+        class EncodingConverter
+        class FormatDetector
+        class DuplicateRemover
+        class NullHandler
+    }
+
+    package "transformers" {
+        abstract class BaseTransformer
+        class DuckDBTransformer
+        class Jinja2Transformer
+        class ToNxsiTransformer
+        class CsvProcessor
+        class JsonProcessor
+        class GtfsProcessor
+        class ShapefileProcessor
+    }
+
+    package "validators" {
+        abstract class BaseValidator
+        class JsonSchemaValidator
+        class DataQualityValidator
+        class NgsiValidator
+        class BusinessRulesValidator
+    }
+
+    package "loaders" {
+        abstract class BaseLoader
+        class LocalFileLoader
+        class HttpLoader
+        class FtpLoader
+        class ScpLoader
+        class ContextBrokerLoader
+        class DatabaseLoader
+    }
+}
+
+
+' #############################################
+' ###             UTILITIES                 ###
+' #############################################
+package "scripts.utils" {
+    class ConfigLoaderUtil <<utility>>
+    class SqlTemplateUtil <<utility>>
+    class FileUtilsUtil <<utility>>
+    class LoggerUtil <<utility>>
+}
+
+
+' #############################################
+' ###            RELATIONSHIPS              ###
+' #############################################
+
+' --- Core Internal Relationships ---
+EtlFlowScript ..> FlowExecutor : initiates
+FlowExecutor o-- PipelineParser
+FlowExecutor o-- StepExecutor
+StepExecutor o-- PluginManager
+StepExecutor ..> DataContainer : passes between steps
+PluginManager ..> PluginRegistry : uses to find plugins
+PluginManager ..> PluginInterface : creates instances of
+
+' --- Interface Inheritance ---
+PluginInterface <|-- ExtractorInterface
+PluginInterface <|-- CleanserInterface
+PluginInterface <|-- TransformerInterface
+PluginInterface <|-- ValidatorInterface
+PluginInterface <|-- LoaderInterface
+
+' --- Base Class Inheritance ---
+ExtractorInterface <|-- BaseExtractor
+CleanserInterface <|-- BaseCleanser
+TransformerInterface <|-- BaseTransformer
+ValidatorInterface <|-- BaseValidator
+LoaderInterface <|-- BaseLoader
+
+' --- Concrete Plugin Inheritance (Examples) ---
+BaseExtractor <|-- LocalFileExtractor
+BaseExtractor <|-- HttpExtractor
+BaseCleanser <|-- DuplicateRemover
+BaseTransformer <|-- DuckDBTransformer
+BaseValidator <|-- DataQualityValidator
+BaseLoader <|-- LocalFileLoader
+BaseLoader <|-- ContextBrokerLoader
+
+' --- Plugin to DataContainer Interaction ---
+LocalFileExtractor ..> DataContainer : creates
+DuckDBTransformer ..> DataContainer : receives & returns
+DataQualityValidator ..> DataContainer : receives & returns
+ContextBrokerLoader ..> DataContainer : receives
+
+@enduml
