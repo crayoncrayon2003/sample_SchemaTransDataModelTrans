@@ -1,4 +1,4 @@
-# scripts/core/orchestrator/__init__.py (修正版)
+# scripts/core/orchestrator/__init__.py
 
 """
 Orchestrator Module

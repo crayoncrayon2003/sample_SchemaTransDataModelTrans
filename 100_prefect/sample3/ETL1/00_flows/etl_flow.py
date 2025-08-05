@@ -1,4 +1,4 @@
-# ETL1/00_flows/etl_flow.py (修正版)
+# ETL1/00_flows/etl_flow.py
 
 import os
 import sys

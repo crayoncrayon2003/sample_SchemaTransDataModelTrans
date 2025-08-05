@@ -1,6 +1,6 @@
-# ETL1/config.yml (最終修正案)
+# ETL1/config.yml
 
-name: "ETL1 - CSV to Parquet" # 名前を修正
+name: "ETL1 - CSV to Parquet"
 
 pipeline:
   - name: "Extract Source CSV"
