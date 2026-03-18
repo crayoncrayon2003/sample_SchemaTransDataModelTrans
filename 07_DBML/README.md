@@ -44,7 +44,7 @@ npm  version 8.x or higher
 * others                    ❌
 
 ### install
-```
+```bash
 $ node -v
 $ v18.19.1
 $ npm -v
@@ -55,12 +55,12 @@ $ dbml2sql --help
 ```
 
 ### How to use
-```
+```bash
 $ dbml2sql gtfsjp_schema.dbml --postgres -o schema.sql
 ```
 
 ## 2.4. python dbml
-```
+```bash
 $ pip install dbml
 $ python dbml_to_dbt_seed_config.py
 ```
