@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "properties": {
+    "fullName":   { "type": "string" },
+    "age":        { "type": "integer" },
+    "score":      { "type": "number" },
+    "location":   { "type": "string" },
+    "entityType": { "type": "string" }
+  },
+  "required": ["fullName", "age"]
+}

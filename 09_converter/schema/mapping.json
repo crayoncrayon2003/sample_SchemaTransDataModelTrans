@@ -1,0 +1,32 @@
+{
+  "fields": [
+    {
+      "src": ["first", "last"],
+      "dst": "fullName",
+      "type": "string",
+      "transform": "join",
+      "separator": " "
+    },
+    {
+      "src": "age",
+      "dst": "age",
+      "type": "integer"
+    },
+    {
+      "src": "score",
+      "dst": "score",
+      "type": "number"
+    },
+    {
+      "src": "city",
+      "dst": "location",
+      "type": "string"
+    },
+    {
+      "src": null,
+      "dst": "entityType",
+      "type": "string",
+      "default": "Person"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+# converter パッケージ 依存ライブラリ
+#
+# インストール:
+#   pip install -r requirements.txt
+#
+# 地理空間データ（GeoJSON / Shapefile / GeoPackage）を使う場合:
+#   pip install -r requirements.txt --extra-index-url https://pypi.org/simple geopandas
+
+# ------------------------------------------------------------------ #
+# 必須
+# ------------------------------------------------------------------ #
+pandas>=2.0.0          # DataFrame・型変換の中核
+openpyxl>=3.1.0        # Excel (.xlsx) の読み書き
+pyarrow>=14.0.0        # Parquet の読み書き・キャッシュ保存
+pyyaml>=6.0.0          # mapping.json が YAML の場合に使用（現在はJSON、将来の拡張用）
+
+# ------------------------------------------------------------------ #
+# オプション（地理空間データを扱う場合のみ）
+# ------------------------------------------------------------------ #
+# geopandas>=0.14.0    # GeoJSON / Shapefile / GeoPackage の読み書き
+# fiona>=1.9.0         # geopandas のバックエンド（Shapefile等）
+# pyogrio>=0.7.0       # geopandas の高速バックエンド（fiona の代替）
+# shapely>=2.0.0       # 地理空間演算（geopandas の依存）
