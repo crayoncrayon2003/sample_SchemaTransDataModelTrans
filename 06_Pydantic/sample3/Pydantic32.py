@@ -27,6 +27,7 @@ def load_generated_model(module_path: Path):
 
 def main():
     directory = os.path.dirname(os.path.abspath(__file__))
+
     # -----------------------
     # 1. load schema
     # -----------------------
@@ -66,23 +67,24 @@ def main():
         raise ImportError("Inputschema クラスが見つかりません")
 
     # -----------------------
-    # 4. carete UnifiedModel Class
+    # 4. create UnifiedModel Class
     # -----------------------
     class UnifiedModel(InputData):
         def __init__(self, **kwargs):
-            # kwargs で入力データを初期化
             super().__init__(**kwargs)
 
-        def model_dump_json(self, *, indent: int = None, idx: int = 1, output_schema: Dict[str, Any] = None) -> str:
+        def to_ngsi_json(self, *, indent: int = None, idx: int = 1, output_schema: Dict[str, Any] = None) -> str:
+            """NGSI-LD形式のJSONを返す。output_schema が None の場合は通常のJSON出力。"""
+
             def detect_ngsi_type(value: Any) -> str:
-                if isinstance(value, str):
-                    return "Text"
-                elif isinstance(value, bool):
+                if isinstance(value, bool):
                     return "Boolean"
                 elif isinstance(value, int):
                     return "Integer"
                 elif isinstance(value, float):
                     return "Number"
+                elif isinstance(value, str):
+                    return "Text"
                 elif isinstance(value, list):
                     return "Array"
                 elif isinstance(value, dict):
@@ -93,23 +95,21 @@ def main():
             data_dict = self.model_dump()
 
             if output_schema is None:
-                ret = json.dumps(data_dict, indent=indent, ensure_ascii=False)
-            else :
-                output = {
-                    "entityId": f"urn:ngsi-ld:csv:{idx}",
-                    "entityType": "Place",
-                }
-                for field_name, field_info in output_schema.get("properties", {}).items():
-                    if field_name in data_dict:
-                        value = data_dict[field_name]
-                        output[field_name] = {
-                            "value": value,
-                            "type": detect_ngsi_type(value)
-                        }
+                return json.dumps(data_dict, indent=indent, ensure_ascii=False)
 
-                ret = json.dumps(output, indent=indent, ensure_ascii=False)
+            output = {
+                "entityId": f"urn:ngsi-ld:csv:{idx}",
+                "entityType": "Place",
+            }
+            for field_name in output_schema.get("properties", {}):
+                if field_name in data_dict:
+                    value = data_dict[field_name]
+                    output[field_name] = {
+                        "value": value,
+                        "type": detect_ngsi_type(value),
+                    }
 
-            return ret
+            return json.dumps(output, indent=indent, ensure_ascii=False)
 
     # -----------------------
     # 5. load csv file
@@ -123,13 +123,14 @@ def main():
     print("== 単発出力 ==")
     for idx, row in enumerate(csv_data):
         model = UnifiedModel(**row)
-        print(model.model_dump_json(indent=2, idx=idx + 1, output_schema=output_schema))
+        print(model.to_ngsi_json(indent=2, idx=idx + 1, output_schema=output_schema))
 
     # -----------------------
     # 7. exec 2
     # -----------------------
+    print("== リスト出力 ==")
     output_json_list = [
-        UnifiedModel(**row).model_dump_json(indent=2, idx=idx + 1, output_schema=output_schema)
+        UnifiedModel(**row).to_ngsi_json(indent=2, idx=idx + 1, output_schema=output_schema)
         for idx, row in enumerate(csv_data)
     ]
     print("[")
@@ -139,4 +140,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
